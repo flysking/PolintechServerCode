@@ -109,6 +109,5 @@ const login = (req, res) => {
 module.exports = {
   getMemberByIdAndPassword,
   login,
-  signUser,
   registerMember,
 };
