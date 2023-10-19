@@ -13,7 +13,8 @@ class MemberDTO {
     member_iscert,
     member_isadmin,
     member_regidate,
-    member_reportcount
+    member_reportcount,
+    member_grade,
   }) {
     this.member_id = member_id;
     this.member_pw = member_pw;
@@ -29,6 +30,7 @@ class MemberDTO {
     this.member_isadmin = member_isadmin;
     this.member_regidate = member_regidate;
     this.member_reportcount = member_reportcount;
+    this.member_grade=member_grade;
   }
 
   toJSON() {
@@ -46,7 +48,8 @@ class MemberDTO {
       member_iscert: this.member_iscert,
       member_isadmin: this.member_isadmin,
       member_regidate: this.member_regidate,
-      member_reportcount: this.member_reportcount
+      member_reportcount: this.member_reportcount,
+      member_grade:this.member_grade,
     };
   }
 }

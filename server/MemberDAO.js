@@ -35,6 +35,7 @@ const registerMember = (
   isAdmin,
   regidate,
   reportcount,
+  grade,
   req,
   callback,
 ) => {
