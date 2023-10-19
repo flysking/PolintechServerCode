@@ -80,6 +80,7 @@ const login = (req, res) => {
   const {id, pw} = req.body;
 
   getMemberByIdAndPassword(id, pw, req, (error, memberDTO) => {
+    console.log(req.body);
     if (error) {
       console.error(error);
       res.status(500).json({success: false});
