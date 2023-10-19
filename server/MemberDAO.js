@@ -99,6 +99,7 @@ const login = (req, res) => {
           major: memberDTO.member_major,
           umber: memberDTO.member_number,
           isAdmin: memberDTO.member_isadmin,
+          grade: memberDTO.member_grade,
         },
       });
     } else {
