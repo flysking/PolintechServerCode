@@ -4,7 +4,8 @@ const MemberDTO = require('./MemberDTO');
 const getMemberByIdAndPassword = (id, pw, req, callback) => {
   //로그인
   const query =
-    'SELECT * FROM polintech.member WHERE member_id = ? AND member_pw = ?';
+    'SELECT * FROM polintech.member join polintech.major'
+    +' on member.member_major=major.major_id WHERE member_id = ? AND member_pw = ?';
 
   db.query(query, [id, pw], (error, results) => {
     if (error) {
@@ -78,7 +79,7 @@ const registerMember = (
 
 const login = (req, res) => {
   const {id, pw} = req.body;
-
+  
   getMemberByIdAndPassword(id, pw, req, (error, memberDTO) => {
     console.log(req.body);
     if (error) {

@@ -15,6 +15,7 @@ class MemberDTO {
     member_regidate,
     member_reportcount,
     member_grade,
+    major_name,
   }) {
     this.member_id = member_id;
     this.member_pw = member_pw;
@@ -31,6 +32,7 @@ class MemberDTO {
     this.member_regidate = member_regidate;
     this.member_reportcount = member_reportcount;
     this.member_grade = member_grade;
+    this.major_name=major_name;
   }
 
   toJSON() {
@@ -50,6 +52,7 @@ class MemberDTO {
       member_regidate: this.member_regidate,
       member_reportcount: this.member_reportcount,
       member_grade: this.member_grade,
+      major_name:this.major_name,
     };
   }
 }
