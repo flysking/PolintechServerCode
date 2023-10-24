@@ -44,6 +44,38 @@ const CreateBoard = (req, res, next) => {
     },
   );
 };
+const EditBoard = (req, res, next) => {
+  //게시글 수정
+  const boardData = req.body;
+  const query =
+    'UPDATE polintech.board SET board_title = ?, board_content = ? WHERE board_id = ?';
+
+  if (
+    !boardData.board_title ||
+    !boardData.board_content ||
+    !boardData.board_id
+  ) {
+    res.status(400).json({error: '게시글 정보가 누락되었습니다.'});
+    return;
+  }
+
+  db.query(
+    query,
+    [boardData.board_title, boardData.board_content, boardData.board_id],
+    (error, results) => {
+      if (error) {
+        console.error('SQL 오류:', error);
+        res.status(500).json({error: '데이터베이스 오류가 발생하였습니다.'});
+        return;
+      }
+
+      res.json({
+        success: true,
+        board: boardData,
+      });
+    },
+  );
+};
 
 const BoardDetail = (boardId, callback) => {
   const query = 'SELECT * FROM polintech.board WHERE board_id = ?';
@@ -62,24 +94,21 @@ const BoardDetail = (boardId, callback) => {
     callback(null, results[0]);
   });
 };
+const BoardDelete = (boardId, callback) => {
+  const query = 'DELETE FROM polintech.board WHERE board_id = ?'; // DELETE * FROM -> DELETE FROM으로 수정
 
-const BoardList = callback => {
-  //게시글 목록
-  const query = 'SELECT * FROM polintech.board';
-  db.query(query, (error, results) => {
+  db.query(query, [boardId], (error, results) => {
     if (error) {
       callback(error, null);
       return;
     }
-
-    const boards = results.map(boardData => new BoardDTO(boardData));
-    callback(null, boards);
+    callback(null, {success: true, message: '게시글이 삭제되었습니다.'});
   });
 };
 
-const BoardListCategory = callback => {
+const BoardList = callback => {
   //게시글 목록
-  const query = 'SELECT * FROM polintech.board where board_category=?';
+  const query = 'SELECT * FROM polintech.board ORDER BY board_id DESC';
   db.query(query, (error, results) => {
     if (error) {
       callback(error, null);
@@ -110,4 +139,6 @@ module.exports = {
   BoardDetail,
   BoardList,
   BoardHitsUpdate,
+  EditBoard,
+  BoardDelete,
 };

@@ -102,6 +102,22 @@ app.post('/Sign', handleSign);
 
 
 app.post('/CreateBoard', BoardDAO.CreateBoard);
+//게시글 생성
+
+app.delete('/DeleteBoard/:boardId', (req, res) => {
+  //게시글 삭제
+  const boardId = req.params.boardId;
+  console.log(boardId);
+  BoardDAO.BoardDelete(boardId, (error, result) => {
+    if (error) {
+      console.error('게시글 삭제 중 오류:', error);
+      res.status(500).json({error: '게시글 삭제 중 오류가 발생하였습니다.'});
+      return;
+    }
+    res.json(result);
+  });
+});
+
 app.get('/BoardList', (req, res) => {
   //게시글 목록 조회
   BoardDAO.BoardList((error, boards) => {
@@ -114,71 +130,74 @@ app.get('/BoardList', (req, res) => {
     console.log('게시글 출력', boards);
   });
 });
-
-// app.get('/BoardDetail/:boardId', (req, res) => {
-//   //게시글 상세보기와 조회수 증가
-//   const boardId = req.params.boardId;
-//   BoardDAO.BoardHitsUpdate(boardId, error => {
-//     if (error) {
-//       console.error('조회수 업데이트 중 오류:', error);
-//       return;
-//     }
-
-//     BoardDAO.BoardDetail(boardId, (error, board) => {
-//       if (error) {
-//         res
-//           .status(500)
-//           .json({error: '데이터베이스 오류가 발생하였습니다(상세보기).'});
-//       }
-
-//       res.json({success: true, board: board});
-//     });
-
-//   });
-// });
-app.get('/BoardDetail/:boardId', (req, res) => {
+app.get('/BoardHitsUpdate/:boardId', (req, res) => {
+  // 조회수 증가
   const boardId = req.params.boardId;
-
-  // 게시글 조회수 증가
   BoardDAO.BoardHitsUpdate(boardId, error => {
     if (error) {
       console.error('조회수 업데이트 중 오류:', error);
       return;
     }
+  });
+});
+app.get('/BoardDetail/:boardId', (req, res) => {
+  //게시글 상세보기
+  const boardId = req.params.boardId;
 
-    // 게시글 상세보기
-    BoardDAO.BoardDetail(boardId, (error, board) => {
-      if (error) {
-        res
-          .status(500)
-          .json({error: '데이터베이스 오류가 발생하였습니다(상세보기).'});
-        return; // 추가: 오류 발생 시 더 이상 진행되지 않도록
+  // 게시글 상세보기
+  BoardDAO.BoardDetail(boardId, (error, board) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(상세보기).'});
+      return; // 추가: 오류 발생 시 더 이상 진행되지 않도록
+    }
+    // 좋아요 갯수 가져오기
+    BoardLikesDAO.CountBoardLikes(boardId, (likeError, likeCount) => {
+      if (likeError) {
+        console.error('좋아요 갯수 조회 중 오류:', likeError);
+        res.status(500).json({
+          error: '데이터베이스 오류가 발생하였습니다(좋아요 갯수 조회).',
+        });
+        return;
       }
 
-      // 좋아요 갯수 가져오기
-      BoardLikesDAO.CountBoardLikes(boardId, (likeError, likeCount) => {
-        if (likeError) {
-          console.error('좋아요 갯수 조회 중 오류:', likeError);
-          res.status(500).json({
-            error: '데이터베이스 오류가 발생하였습니다(좋아요 갯수 조회).',
-          });
-          return;
-        }
+      // 응답
+      res.json({success: true, board: board, likes: likeCount});
+    });
+  });
+});
 
-        // 응답
-        res.json({success: true, board: board, likes: likeCount});
-      });
+app.get('/BoardDetailUpdate/:boardId', (req, res) => {
+  //게시글 상세보기(좋아요 변경시)
+  const boardId = req.params.boardId;
+  // 게시글 상세보기
+  BoardDAO.BoardDetail(boardId, (error, board) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(상세보기).'});
+      return; // 추가: 오류 발생 시 더 이상 진행되지 않도록
+    }
+
+    // 좋아요 갯수 가져오기
+    BoardLikesDAO.CountBoardLikes(boardId, (likeError, likeCount) => {
+      if (likeError) {
+        console.error('좋아요 갯수 조회 중 오류:', likeError);
+        res.status(500).json({
+          error: '데이터베이스 오류가 발생하였습니다(좋아요 갯수 조회).',
+        });
+        return;
+      }
+
+      // 응답
+      res.json({success: true, board: board, likes: likeCount});
     });
   });
 });
 
 app.post('/LikePlus', (req, res) => {
-  const memberId = req.body.memberId;
-  const boardId = req.body.boardId;
-
-  console.log('memberId:', memberId);
-  console.log('boardId:', boardId);
-
+  //좋아요 추가
   BoardLikesDAO.CreateBoardLikes(req, res, () => {
     // 좋아요가 성공적으로 처리된 후, 게시글의 좋아요 갯수를 조회합니다.
     BoardLikesDAO.CountBoardLikes(boardId, (likeError, likeCount) => {
@@ -194,6 +213,43 @@ app.post('/LikePlus', (req, res) => {
       res.json({success: true, likes: likeCount});
       console.log('좋아요 갯수(server_버튼) :', likeCount);
     });
+  });
+});
+app.post('/EditBoard/', BoardDAO.EditBoard);
+//게시글 수정
+
+//-----------------------------------------------------------------------------------------
+// ... 댓글 코드 ...
+
+app.post('/CommentAdd', CommentDAO.CreateComment);
+// 댓글 생성
+
+app.get('/CommentList/:boardId', (req, res) => {
+  // 댓글 조회 (특정 게시글의 모든 댓글을 가져오는 가정)
+  const boardId = req.params.boardId;
+  CommentDAO.CommentList(boardId, (error, comments) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(댓글 조회).'});
+      return;
+    }
+    res.json({success: true, comments});
+  });
+});
+app.post('/EditComment/', CommentDAO.EditComment);
+//댓글 수정
+app.delete('/DeleteComment/:comment_id', (req, res) => {
+  //댓글 삭제
+  const CommentId = req.params.comment_id;
+  console.log(CommentId);
+  CommentDAO.DeleteComment(CommentId, (error, result) => {
+    if (error) {
+      console.error('댓글 삭제 중 오류:', error);
+      res.status(500).json({error: '댓글 삭제 중 오류가 발생하였습니다.'});
+      return;
+    }
+    res.json(result);
   });
 });
 
