@@ -7,6 +7,8 @@ const BoardDAO = require('./BoardDAO');
 const BoardDTO = require('./BoardDTO');
 const BoardLikesDAO = require('./BoardLikesDAO');
 const BoardLikesDTO = require('./BoardLikesDTO');
+const CommentDAO = require('./CommentDAO');
+const CommentDTO = require('./CommentDTO');
 const db = require('./dbConnection'); // DB 연결 모듈 가져오기
 
 const app = express();
