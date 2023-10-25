@@ -1,4 +1,7 @@
 const express = require('express');
+const {Storage}=require('@google-cloud/storage');
+const multer=require('multer')
+const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MemberDTO = require('./MemberDTO');
@@ -22,6 +25,39 @@ app.use(
     saveUninitialized: true,
   }),
 );
+
+//-------이미지---------------
+const storage=new Storage({
+  projectId:'groovy-smithy-402915',
+  keyFilename:'./groovy-smithy-402915-06f6145216d9.json',
+});
+
+const bucket=storage.bucket('polintech_image');
+const upload=multer({
+  storage:multer.memoryStorage(),
+});
+app.post('/upload',upload.single('image'),(req,res)=>{
+  if(!req.file){
+    return res.status(400).send('파일이 없습니다.');
+  }
+  const file=bucket.file(Date.now()+path.extname(req.file.originalname));
+
+  const blobStream=file.createWriteStream({
+    metadata:{
+      contentType:req.file.mimetype,
+    },
+  });
+  blobStream.on('error',(err)=>{
+    console.error(err);
+    res.status(500).send('이미지 업로드 중 오류발생');
+  });
+
+  blobStream.on('finish',()=>{
+    res.status(200).json({message:'이미지가 성공적으로 업로드 되었습니다.'});
+  });
+  blobStream.end(req.file.buffer);
+})
+//----------------------------
 
 app.post('/login', MemberDAO.login);
 

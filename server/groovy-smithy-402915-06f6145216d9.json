@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "groovy-smithy-402915",
+  "private_key_id": "06f6145216d9debf991112c161a5336a637af435",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCZ7I6ysnGJT+0N\n7DEtISYXPUis0TCEYBFEo97hQypBudrbMtGs3ZiSmI6QIw0AAdFXKOi+DWmhg9kO\nb2hQthzKUjj9PLgAsD6lhsAz2ep4nzbmb7TTmo3bPkYh9/f6zx32Rwjbz15Ttdg/\n58uKg6kZuvopTpTDHF6lJBodKUvC2/JMeF5rlanszktIm0Ln8RkhBTN03BgsNT+Y\n5KFzXKpQbuvyMOBHrqecDZo3y8QoatNJySZqvHmZltNkpCP7ylg8DE5WsCh+4A24\nc97zVzTW30XhwSuW0R4hxn9AgDBBASzs1bA4kzdpOhBXVDZwp01V9Ha+OtkLb2ge\nsk9pv061AgMBAAECggEARf4MsXN1L1RZ3i/d+MCPGpgyeOsy3a71iznc+p/ZEkQa\nIfzM3Ydyfo7CnQZjPfKVp8Whd/KPavOSev7r92+oTdPvuC+pGB8MjaZlte5MsYbs\npwJ6vpIUGXMK3x1r9O/Dlx6cB6AXK4eQCxczNgxCk8GzSZ9DBCndW8i72zDRE4zN\n2Yra9DfXy0lQESVtbt5RC2aIVzdOWt9ONLYx6jUrQI7856SgjIoIJrKMB7RemRe8\n4SVmDlFRBFNHpydPD9w0d6rvdPzmmeXtUNlTlnZKt0TxjoVGhT6oH6HMpLaujZOC\nlwV3YlwF/7sxdLulT1nNQvtet206Cdm828peldTKzQKBgQDMM811hYKbY+rjt1rO\nyP2so6MMmbaBgpQ0oA9hCj49BqTsnrrkpQeAW2LJcJZYQV3hUndnXBZ+4t++DWW5\n2d0OxYcuTpKpbN4By2TNR65f/n9XntXUthUUT2wI/t4KhCcKDVNgkygH/2wExoUv\n+hnDwWJunl+TCeAWiRYD+h6j3wKBgQDA99rqsYd7MUiJCjdixkZzLx7kTxxMKEMH\nnyNZcHiwo37jZLs+uWu+0Fn5c34cMpdGeFOIB7RFUKsTBIcqA1E7g22EkstQ/Cq4\nSulALioj0duL/ie/AVVP7L5UoSV06ZTRzTyoSFSdiN/Xu3nVr/PRKlHqjLsOR7Fu\n7thCrBU/6wKBgD2owrhiyQ48vHdoLQ5VmGuhuaEbZQV0NWYykpI9so9gyzn7r/lM\nb5htf8XNrkgV7NAVw6I9JznHLcJIb1gQFfTY5jmwVg68pciq7tQheeDYiwEdH/or\nxO+uD7QjqU5JmzQo0+1MYgEQOkCy5RKYlWELqro2LivLBpQnbrNiug/HAoGAUWO5\nKCg81o8Q4ww2FClA6bBEPVPIwa5xpzNN+5lerlInYM3J1Ejs0wyaBobZ+Ba2i3iQ\n8t0dAedmYJ0WTXgcuRdUCAjKTJwvgI/IFdPi3jzTdxZ5uSxcyVs3ZAab/9XNeTgx\nj2ECn3dtwlZGqwSNt/k7l8xH0VwX0IxZFrXyOIUCgYBAS9RolItB+6AbjwLKpI35\nXwcUVA4TZ72cTodhpt6T9Pk6JWnjsg1Opz/0KSbcFdabwSS15BGtb7XmgOk7mXQP\ne29pckmACE/EIv1xFVVDL/wmXIkpF3g9JEOG+TO9CYgZYoNxTQkcYJv7AvvlG/pu\nE29Tr8eIfvQNQG2R4CRQng==\n-----END PRIVATE KEY-----\n",
+  "client_email": "polintech-cloudservice@groovy-smithy-402915.iam.gserviceaccount.com",
+  "client_id": "100973604090113197397",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/polintech-cloudservice%40groovy-smithy-402915.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
