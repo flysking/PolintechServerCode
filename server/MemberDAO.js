@@ -23,7 +23,7 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
   });
 };
 const UpdateIsCert=(req,res)=>{
-  const member_id = req.body.mid;
+  const member_id = req.body;
   console.log('인증 요청한 유저',member_id);
   const query=
     'update polintech.member set member_iscert=member_iscert+1 where member_id=?';
