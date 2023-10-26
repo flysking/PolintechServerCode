@@ -40,10 +40,12 @@ const UpdateIsCert=(req,res)=>{
         res.status(500).json({
           success:false,
           message:'DB 업데이트 실패함',});
+          return;
       }else{
         res.status(200).json({
           success:true,
           message:'DB 업데이트 성공~',});
+          return;
       }
     });
 };
