@@ -24,7 +24,14 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
 };
 const UpdateIsCert=(req,res)=>{
   const member_id = req.body.member_id;
+  if(
+    !member_id
+  ){
+    res.status(400).json({error:'회원 정보가 없습니다.'});
+   return;
+}
   console.log('인증 요청한 유저',member_id);
+
   const query=
     'update polintech.member set member_iscert=member_iscert+1 where member_id=?';
     db.query(query,[member_id],(error,results)=>{
