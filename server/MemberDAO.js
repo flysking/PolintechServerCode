@@ -23,7 +23,7 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
   });
 };
 const UpdateIsCert=(req,res)=>{
-  const member_id = req.body;
+  const member_id = req.body.member_id;
   console.log('인증 요청한 유저',member_id);
   const query=
     'update polintech.member set member_iscert=member_iscert+1 where member_id=?';
@@ -32,11 +32,11 @@ const UpdateIsCert=(req,res)=>{
         console.error(error,'데이터베이스 업데이트 오류');
         res.status(500).json({
           success:false,
-          message:'DB 업데이트 실패함'});
-      }else if(results){
+          message:'DB 업데이트 실패함',});
+      }else{
         res.status(200).json({
           success:true,
-          message:'DB 업데이트 성공~'});
+          message:'DB 업데이트 성공~',});
       }
     });
 };
