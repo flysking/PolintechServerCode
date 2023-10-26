@@ -67,10 +67,10 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
 //-----------이미지DB----------
 app.post('/UploadToDB', ImageDAO.UploadToDB);
 
-app.post('/UpdateIsCert/:member_id',(req,res)=>{
-  const member_id=req.params.member_id;
-  console.log('요청받은 아이디: ',member_id);
-  MemberDAO.UpdateIsCert(member_id,(error,result)=>{
+app.get('/UpdateIsCert/:member_id',(req,res)=>{
+  const mid=req.params.member_id;
+  console.log('요청받은 아이디: ',mid);
+  MemberDAO.UpdateIsCert(mid,(error,result)=>{
     if(error){
       res
         .status(500)
