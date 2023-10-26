@@ -12,6 +12,8 @@ const BoardLikesDAO = require('./BoardLikesDAO');
 const BoardLikesDTO = require('./BoardLikesDTO');
 const CommentDAO = require('./CommentDAO');
 const CommentDTO = require('./CommentDTO');
+const ImageDTO = require('./ImageDTO');
+const ImageDAO = require('./ImageDAO');
 const db = require('./dbConnection'); // DB 연결 모듈 가져오기
 
 const app = express();
@@ -26,22 +28,26 @@ app.use(
   }),
 );
 
-//-------이미지---------------
+//-------구글 클라우드 연동---------------
 const storage=new Storage({
   projectId:'groovy-smithy-402915',
-  keyFilename:'./groovy-smithy-402915-06f6145216d9.json',
+  keyFilename:'./server/groovy-smithy-402915-06f6145216d9.json',
 });
 
 const bucket=storage.bucket('polintech_image');
 const upload=multer({
   storage:multer.memoryStorage(),
 });
-app.post('/upload',upload.single('image'),(req,res)=>{
+app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
+  console.log('서버 연결 성공');
   if(!req.file){
     return res.status(400).send('파일이 없습니다.');
   }
-  const file=bucket.file(Date.now()+path.extname(req.file.originalname));
-
+  const folderPath = 'ServerImage/'; // 폴더 경로
+  const fileName = Date.now() + path.extname(req.file.originalname); // 파일 이름
+  const filePath = folderPath + fileName; // 전체 파일 경로
+  
+  const file = bucket.file(filePath);
   const blobStream=file.createWriteStream({
     metadata:{
       contentType:req.file.mimetype,
@@ -58,7 +64,25 @@ app.post('/upload',upload.single('image'),(req,res)=>{
   blobStream.end(req.file.buffer);
 })
 //----------------------------
+//-----------이미지DB----------
+app.post('/UploadToDB', ImageDAO.UploadToDB);
 
+app.post('/UpdateIsCert/:member_id',(req,res)=>{
+  const member_id=req.params.member_id;
+  console.log('요청받은 아이디: ',member_id);
+  MemberDAO.UpdateIsCert(member_id,(error,result)=>{
+    if(error){
+      res
+        .status(500)
+        .json({error:'이미지 db 액세스중 오류발생'});
+        return;
+    }
+    res.json({success:true,result:result});
+  });
+});
+//--------------------------  
+
+//----로그인 관련---------
 app.post('/login', MemberDAO.login);
 
 app.post('/logout', (req, res) => {

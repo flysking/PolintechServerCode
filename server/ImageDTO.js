@@ -1,30 +1,24 @@
 class ImageDTO {
     constructor({
-      board_id,
-      board_title,
-      board_content,
-      board_mid,
-      board_hits,
-      board_category,
-      board_postdate
+      image_id,
+      image_name,
+      image_category,
+      image_postdate,
+      image_mid,
     }) {
-      this.board_id = board_id;
-      this.board_title = board_title;
-      this.board_content = board_content;
-      this.board_mid = board_mid;
-      this.board_hits = board_hits;
-      this.board_category = board_category;
-      this.board_postdate = board_postdate;
+      this.image_id = image_id;
+      this.image_name = image_name;
+      this.image_category =  image_category;
+      this.image_postdate = image_postdate;
+      this.image_mid = image_mid;
     }
     toJSON() {
       return {
-        board_id: this.board_id,
-        board_title: this.board_title,
-        board_content: this.board_content,
-        board_mid: this.board_mid,
-        board_hits: this.board_hits,
-        board_category: this.board_category,
-        board_postdate: this.board_postdate
+        image_id: this.image_id,
+        image_name: this.image_name,
+        image_category: this.image_category,
+        image_postdate: this.image_postdate,
+        image_mid: this.image_mid,
       };
     }
   }

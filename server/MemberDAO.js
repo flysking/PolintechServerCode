@@ -22,6 +22,19 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
     }
   });
 };
+const UpdateIsCert=(req,res,next)=>{
+  const isCert = req.body.mid;
+  const query=
+    'update polintech.member set member_iscert=member_iscert+1 where member_id=?';
+    db.query(query,[isCert],(error,results)=>{
+      if(error){
+        callback(error,null);
+        return;
+      }
+      callback(null,results);
+    });
+};
+
 const registerMember = (
   id,
   pw,
@@ -119,4 +132,5 @@ module.exports = {
   getMemberByIdAndPassword,
   login,
   registerMember,
+  UpdateIsCert,
 };
