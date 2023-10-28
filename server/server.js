@@ -146,7 +146,6 @@ const handleSign = (req, res) => {
 
 app.post('/Sign', handleSign);
 
-//이메일 인증
 const generateRandomVerificationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -199,6 +198,36 @@ app.post('/AuthCheck', (req, res) => {
   }
 });
 
+//이메일로 아이디 찾기
+const handleFindIdByEmail = (req, res) => {
+  const { id, email } = req.body;
+
+  MemberDAO.getMemberByEmail(id, email, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('이메일로 찾은 회원 정보:', memberDTO.member_id);
+
+      // 여기에서 필요한 회원 정보를 클라이언트로 전달합니다.
+      res.json({
+        success: true,
+        member: {
+          id: memberDTO.member_id,
+          email: memberDTO.member_email,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/findId', handleFindIdByEmail);
 //-------------------
 //--------게시글 관련-----------
 app.post('/CreateBoard', BoardDAO.CreateBoard);
