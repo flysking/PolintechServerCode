@@ -57,17 +57,15 @@ const registerMember = (
   major,
   birth,
   gender,
-  iscert,
-  isAdmin,
-  regidate,
-  reportcount,
   grade,
   req,
   callback,
 ) => {
   //회원가입
-  const query = 'insert into polintech.member (member_id, member_pw, member_name, member_nickname, member_engname, member_email, member_major, member_birth, member_gender, member_iscert, member_isadmin, member_regidate, member_reportcount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, CURRENT_TIMESTAMP, 0)';
-
+  console.log("db",req.body);
+  console.log("grade",grade);
+  const query = 'insert into polintech.member (member_id, member_pw, member_name, member_nickname, member_engname, member_email, member_major, member_birth, member_gender, member_grade) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            
   db.query(
     query,
     [
@@ -80,10 +78,7 @@ const registerMember = (
       major,
       birth,
       gender,
-      iscert,
-      isAdmin,
-      regidate,
-      reportcount,
+      grade,
     ],
     (error, results) => {
       if (error) {

@@ -70,7 +70,7 @@ app.post('/UploadToDB', ImageDAO.UploadToDB);
 app.post('/UpdateIsCert',MemberDAO.UpdateIsCert);
 //--------------------------  
 
-//----로그인 관련---------
+//----로그인/회원가입 관련---------
 app.post('/login', MemberDAO.login);
 
 app.post('/logout', (req, res) => {
@@ -81,6 +81,7 @@ app.post('/logout', (req, res) => {
 });
 
 const handleSign = (req, res) => {
+  console.log("server:",req.body);
   const {
     id,
     pw,
@@ -91,10 +92,7 @@ const handleSign = (req, res) => {
     major,
     birth,
     gender,
-    iscert,
-    isAdmin,
-    regidate,
-    reportcount,
+    grade,
   } = req.body;
 
   MemberDAO.registerMember(
@@ -107,10 +105,7 @@ const handleSign = (req, res) => {
     major,
     birth,
     gender,
-    iscert,
-    isAdmin,
-    regidate,
-    reportcount,
+    grade,
     req,
     (error, memberDTO) => {
       //회원가입 로직
@@ -139,6 +134,7 @@ const handleSign = (req, res) => {
             isadmin: memberDTO.member_isadmin,
             regidate: memberDTO.member_regidate,
             reportcount: memberDTO.member_reportcount,
+            grade: memberDTO.member_grade,
           },
         });
       } else {
@@ -150,7 +146,61 @@ const handleSign = (req, res) => {
 
 app.post('/Sign', handleSign);
 
+//이메일 인증
+const generateRandomVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
+const verificationCode = generateRandomVerificationCode();
+
+app.post('/EmailAuth', async (req, res) => {
+  const { userEmail } = req.body;
+  
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'polintechnoreply@gmail.com',
+      pass: 'krwsldkwkbpmjxwq',
+    },
+  });
+
+  try {
+
+    const mailOptions = {
+      from: '폴인텍',
+      to: userEmail,
+      subject: '폴인텍 회원가입 인증번호',
+      text: verificationCode,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send('메일 전송 실패');
+      } else {
+        console.log('Email sent:', info.response);
+        res.status(200).send('메일 전송 성공!');
+      }
+    });
+  } catch (error) {
+    console.error('메일 전송 실패:', error);
+    res.status(500).send('메일 전송 실패');
+  }
+});
+
+//이메일 인증 확인
+app.post('/AuthCheck', (req, res) => {
+  const { authCheck } = req.body;
+
+  if (authCheck === verificationCode) {
+    res.status(200).send('인증번호 일치');
+  } else {
+    res.status(400).send('인증번호 불일치');
+  }
+});
+
+//-------------------
+//--------게시글 관련-----------
 app.post('/CreateBoard', BoardDAO.CreateBoard);
 //게시글 생성
 
