@@ -5,15 +5,17 @@ const CreateBoard = (req, res, next) => {
   //게시글 생성
   //제목,내용,회원의 id 받음
   const boardData = req.body;
+  console.log(boardData);
   const query =
-    'INSERT INTO polintech.board (board_title, board_content, board_mid, board_category) VALUES (?, ?, ?, ?)';
+    'INSERT INTO polintech.board (board_title, board_content, board_mid, board_category,board_subcategory) VALUES (?, ?, ?, ?, ?)';
 
   if (
     //게시글 정보가 누락되었을
     !boardData.board_title ||
     !boardData.board_content ||
     !boardData.board_mid ||
-    !boardData.board_category
+    !boardData.board_category ||
+    !boardData.board_subcategory
   ) {
     res.status(400).json({error: '게시글 정보가 누락되었습니다.'});
     return;
@@ -26,6 +28,7 @@ const CreateBoard = (req, res, next) => {
       boardData.board_content,
       boardData.board_mid,
       boardData.board_category,
+      boardData.board_subcategory,
     ],
     (error, results) => {
       if (error) {
@@ -78,20 +81,22 @@ const EditBoard = (req, res, next) => {
 };
 
 const BoardDetail = (boardId, callback) => {
-  const query = 'SELECT * FROM polintech.board WHERE board_id = ?';
+  const query =
+    'select board.*, member.member_nickname from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' where board_id = ?';
 
   db.query(query, [boardId], (error, results) => {
     if (error) {
       callback(error, null);
       return;
     }
-
     if (results.length === 0) {
       callback(new Error('게시글을 찾을 수 없습니다.'), null);
       return;
     }
-
-    callback(null, results[0]);
+    const boards = new BoardDTO(results[0]);
+    callback(null, boards);
   });
 };
 const BoardDelete = (boardId, callback) => {
@@ -108,7 +113,11 @@ const BoardDelete = (boardId, callback) => {
 
 const BoardList = callback => {
   //게시글 목록
-  const query = 'SELECT * FROM polintech.board ORDER BY board_id DESC';
+  const query =
+    'select board.*, member.member_nickname from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' order by board.board_id desc';
+
   db.query(query, (error, results) => {
     if (error) {
       callback(error, null);

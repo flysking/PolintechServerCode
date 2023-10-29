@@ -15,6 +15,7 @@ const CreateBoardLikes = (req, res) => {
 
     if (results && results.length > 0) {
       // 이미 좋아요한 경우, 좋아요 삭제
+      console.log('좋아요 제거 시작'); // <-- 로그 추가
       DeleteBoardLike(req, res, (delError, delResults) => {
         if (delError) {
           res
@@ -23,6 +24,7 @@ const CreateBoardLikes = (req, res) => {
           return;
         }
         res.json({success: true, message: '좋아요가 제거되었습니다.'});
+        console.log('좋아요 제거 완료'); // <-- 로그 추가
       });
     } else {
       // 아직 좋아요하지 않은 경우, 좋아요 추가
@@ -103,6 +105,7 @@ const CountBoardLikes = (boardId, callback) => {
     }
 
     callback(null, results[0].likeCount);
+    console.log('서버 좋아요 갯수 : ', results[0].likeCount);
   });
 };
 

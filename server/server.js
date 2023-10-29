@@ -15,6 +15,8 @@ const CommentDAO = require('./CommentDAO');
 const CommentDTO = require('./CommentDTO');
 const ImageDTO = require('./ImageDTO');
 const ImageDAO = require('./ImageDAO');
+const ReplyDAO = require('./ReplyDAO');
+const ReplyDTO = require('./ReplyDTO');
 const db = require('./dbConnection'); // DB 연결 모듈 가져오기
 
 const app = express();
@@ -231,23 +233,6 @@ const handleFindIdByEmail = (req, res) => {
 app.post('/findId', handleFindIdByEmail);
 //-------------------
 //--------게시글 관련-----------
-app.post('/CreateBoard', BoardDAO.CreateBoard);
-//게시글 생성
-
-app.delete('/DeleteBoard/:boardId', (req, res) => {
-  //게시글 삭제
-  const boardId = req.params.boardId;
-  console.log(boardId);
-  BoardDAO.BoardDelete(boardId, (error, result) => {
-    if (error) {
-      console.error('게시글 삭제 중 오류:', error);
-      res.status(500).json({error: '게시글 삭제 중 오류가 발생하였습니다.'});
-      return;
-    }
-    res.json(result);
-  });
-});
-
 app.get('/BoardList', (req, res) => {
   //게시글 목록 조회
   BoardDAO.BoardList((error, boards) => {
@@ -350,7 +335,6 @@ app.post('/EditBoard/', BoardDAO.EditBoard);
 
 //-----------------------------------------------------------------------------------------
 // ... 댓글 코드 ...
-
 app.post('/CommentAdd', CommentDAO.CreateComment);
 // 댓글 생성
 
@@ -382,7 +366,41 @@ app.delete('/DeleteComment/:comment_id', (req, res) => {
     res.json(result);
   });
 });
-
+//-----------------------------------------------------------------------------------------
+//답글 코드
+app.get('/ReplyList/:boardId', (req, res) => {
+  // 답글 조회 (특정 게시글의 모든 댓글을 가져오는 가정)
+  const boardId = req.params.boardId;
+  console.log('게시글 번호(답글) : ', boardId);
+  ReplyDAO.ReplyList(boardId, (error, replys) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(댓글 조회).'});
+      return;
+    }
+    console.log('답글(server) : ', replys);
+    res.json({success: true, replys});
+  });
+});
+app.post('/ReplyAdd', ReplyDAO.CreateReply);
+//답글 생성
+app.post('/EditReply/', ReplyDAO.EditReply);
+//답글 수정
+app.delete('/DeleteReply/:reply_id', (req, res) => {
+  //답글 삭제
+  const reply_id = req.params.reply_id;
+  console.log(reply_id);
+  ReplyDAO.DeleteReply(reply_id, (error, result) => {
+    if (error) {
+      console.error('답글 삭제 중 오류:', error);
+      res.status(500).json({error: '답글 삭제 중 오류가 발생하였습니다.'});
+      return;
+    }
+    res.json(result);
+  });
+});
+//------------------------
 // ... 기타 라우터 및 코드 ...
 
 app.listen(3000, () => console.log('Server is running on port 3000'));

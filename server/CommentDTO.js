@@ -5,12 +5,14 @@ class CommentDTO {
     comment_content,
     comment_mid,
     comment_postdate,
+    member_nickname,
   }) {
     this.comment_id = comment_id;
     this.comment_bid = comment_bid;
     this.comment_content = comment_content;
     this.comment_mid = comment_mid;
     this.comment_postdate = comment_postdate;
+    this.member_nickname = member_nickname;
   }
 
   toJSON() {
@@ -20,6 +22,7 @@ class CommentDTO {
       comment_content: this.comment_content,
       comment_mid: this.comment_mid,
       comment_postdate: this.comment_postdate,
+      member_nickname: this.member_nickname,
     };
   }
 }

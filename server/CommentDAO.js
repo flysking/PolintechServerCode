@@ -36,7 +36,7 @@ const CreateComment = (req, res, next) => {
         res.status(500).json({error: '데이터베이스 오류가 발생하였습니다.'});
         return;
       }
-
+      console.log('댓글 정보 : ', results);
       res.json({
         success: true,
         comment: {
@@ -105,7 +105,9 @@ const DeleteComment = (commentId, callback) => {
 // };
 const CommentList = (boardId, callback) => {
   const query =
-    'SELECT * FROM polintech.comment WHERE comment_bid = ? ORDER BY comment_id DESC';
+    'SELECT comment.* ,member.member_nickname FROM polintech.comment' +
+    ' JOIN polintech.member on comment.comment_mid  = member.member_id ' +
+    ' WHERE comment_bid = ? ORDER BY comment_id DESC';
 
   db.query(query, [boardId], (error, results) => {
     if (error) {
@@ -118,8 +120,8 @@ const CommentList = (boardId, callback) => {
       return;
     }
 
-    console.log('댓글 조회(DB) 성공');
     const comments = results.map(commentData => new CommentDTO(commentData));
+    console.log('댓글 조회(DB) 성공', comments);
     callback(null, comments);
   });
 };
