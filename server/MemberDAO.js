@@ -31,7 +31,7 @@ const UpdateIsCert=(req,res)=>{
   console.log('인증 요청한 유저',member_id.member_id);
 
   const query=
-    'update polintech.member set member_iscert=member_iscert+1 where member_id=?';
+    'update polintech.member set member_iscert=1 where member_id=?';
     db.query(query,[member_id.member_id],(error,results)=>{
       if(error){
         console.error(error,'데이터베이스 업데이트 오류');
