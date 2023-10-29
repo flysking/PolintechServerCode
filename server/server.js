@@ -31,7 +31,8 @@ app.use(
   }),
 );
 
-//-------구글 클라우드 연동---------------
+//------이미지 관련---------------
+////구글 클라우드 업로드
 const storage=new Storage({
   projectId:'groovy-smithy-402915',
   keyFilename:'./server/groovy-smithy-402915-06f6145216d9.json',
@@ -47,7 +48,7 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
     return res.status(400).send('파일이 없습니다.');
   }
   const folderPath = 'ServerImage/'; // 폴더 경로
-  const fileName = Date.now() + path.extname(req.file.originalname); // 파일 이름
+  const fileName = req.file.originalname; // 파일 이름
   const filePath = folderPath + fileName; // 전체 파일 경로
   
   const file = bucket.file(filePath);
@@ -65,11 +66,53 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
     res.status(200).json({message:'이미지가 성공적으로 업로드 되었습니다.'});
   });
   blobStream.end(req.file.buffer);
-})
+});
+app.post('/UploadBoardImage', upload.single('image'), (req, res) => {
+  //게시글 이미지(구글 클라우드로 전송)
+  console.log('서버 연결 성공');
+  if (!req.file) {
+    return res.status(400).send('파일이 없습니다.');
+  }
+  const folderPath = 'ServerImage/'; // 폴더 경로
+
+  const fileName = req.file.originalname; // 클라이언트에서 보낸 파일의 원래 이름을 사용
+  const filePath = folderPath + fileName; // 전체 파일 경로
+  console.log('파일 이름: ', fileName);
+  const file = bucket.file(filePath);
+  const blobStream = file.createWriteStream({
+    metadata: {
+      contentType: req.file.mimetype,
+    },
+  });
+  blobStream.on('error', err => {
+    console.error(err);
+    res.status(500).send('이미지 업로드 중 오류발생');
+  });
+
+  blobStream.on('finish', () => {
+    res.status(200).json({message: '이미지가 성공적으로 업로드 되었습니다.'});
+  });
+  blobStream.end(req.file.buffer);
+});
+app.get('/ImageCheck/:boardId', (req, res) => {
+  // 댓글 조회 (특정 게시글의 모든 댓글을 가져오는 가정)
+  const boardId = req.params.boardId;
+  ImageDAO.imageCheck(boardId, (error, imageData) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(이미지 조회).'});
+      return;
+    }
+    console.log('imageData(server) : ', imageData);
+    res.json({success: true, imageData});
+  });
+});
 //----------------------------
 //-----------이미지DB----------
 app.post('/UploadToDB', ImageDAO.UploadToDB);
-
+app.post('/UploadBoardImageToDB', ImageDAO.UploadBoardImageToDB);
+app.post('/UpdateBoardImageToDB', ImageDAO.UpdateBoardImageToDB);
 app.post('/UpdateIsCert',MemberDAO.UpdateIsCert);
 //--------------------------  
 
