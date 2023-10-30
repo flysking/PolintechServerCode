@@ -120,7 +120,7 @@ app.post('/UploadIdc',IdcDAO.IdcUpload);
 
 app.get('/SearchIdc/:member_Id', (req, res) => {
   //게시글 상세보기
-  const member_id = req.params;
+  const member_id = req.params.member_Id;
   console.log(member_id);
   // 게시글 상세보기
   IdcDAO.SearchIdc(member_id, (error, idc) => {
