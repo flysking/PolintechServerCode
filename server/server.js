@@ -17,6 +17,7 @@ const ImageDTO = require('./ImageDTO');
 const ImageDAO = require('./ImageDAO');
 const ReplyDAO = require('./ReplyDAO');
 const ReplyDTO = require('./ReplyDTO');
+const IdcDAO=require('./IdcDAO');
 const db = require('./dbConnection'); // DB 연결 모듈 가져오기
 
 const app = express();
@@ -95,7 +96,6 @@ app.post('/UploadBoardImage', upload.single('image'), (req, res) => {
   blobStream.end(req.file.buffer);
 });
 app.get('/ImageCheck/:boardId', (req, res) => {
-  // 댓글 조회 (특정 게시글의 모든 댓글을 가져오는 가정)
   const boardId = req.params.boardId;
   ImageDAO.imageCheck(boardId, (error, imageData) => {
     if (error) {
@@ -115,6 +115,26 @@ app.post('/UploadBoardImageToDB', ImageDAO.UploadBoardImageToDB);
 app.post('/UpdateBoardImageToDB', ImageDAO.UpdateBoardImageToDB);
 app.post('/UpdateIsCert',MemberDAO.UpdateIsCert);
 //--------------------------  
+//-----------학생증 관련-------
+app.post('/UploadIdc',IdcDAO.IdcUpload);
+app.get('/SearchIdc/:member_Id', (req, res) => {
+  //게시글 상세보기
+  const member_id = req.params.member_id;
+
+  // 게시글 상세보기
+  IdcDAO.SearchIdc(member_id, (error, idc) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '학생증 조회 중 오류가 발생했습니다.'});
+      return; // 추가: 오류 발생 시 더 이상 진행되지 않도록
+    }
+      // 응답
+      res.json({success: true, idc: idc });
+    });
+});
+//----------------------------
+
 
 //----로그인/회원가입 관련---------
 app.post('/login', MemberDAO.login);
