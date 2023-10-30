@@ -4,7 +4,6 @@ const IdcDTO=require('./IdcDTO');
 const SearchIdc = (member_id, callback) => {
     const query =
     'select * from studentidc where idc_mid=? and idc_isaccept=1';
-  
     db.query(query, [member_id], (error, results) => {
       if (error) {
         callback(error, null);
@@ -15,6 +14,7 @@ const SearchIdc = (member_id, callback) => {
         return;
       }
       const idc = new IdcDTO(results[0]);
+      console.log('idcDTO정보:',idc);
       callback(null, idc);
     });
   };
