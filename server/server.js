@@ -120,7 +120,7 @@ app.post('/UploadIdc',IdcDAO.IdcUpload);
 
 app.get('/SearchIdc/:member_Id', (req, res) => {
   //게시글 상세보기
-  const member_id = req.params.member_id;
+  const member_id = req.params;
   console.log(member_id);
   // 게시글 상세보기
   IdcDAO.SearchIdc(member_id, (error, idc) => {
@@ -136,8 +136,6 @@ app.get('/SearchIdc/:member_Id', (req, res) => {
     });
 });
 //----------------------------
-
-
 //----로그인/회원가입 관련---------
 app.post('/login', MemberDAO.login);
 
