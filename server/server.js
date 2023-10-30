@@ -117,6 +117,7 @@ app.post('/UpdateIsCert',MemberDAO.UpdateIsCert);
 //--------------------------  
 //-----------학생증 관련-------
 app.post('/UploadIdc',IdcDAO.IdcUpload);
+
 app.get('/SearchIdc/:member_Id', (req, res) => {
   //게시글 상세보기
   const member_id = req.params.member_id;

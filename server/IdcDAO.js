@@ -45,4 +45,5 @@ const IdcUpload=(req,res)=>{
 }
 module.exports={
     IdcUpload,
+    SearchIdc,
 };
