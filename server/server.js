@@ -72,7 +72,7 @@ app.post('/UploadIdcImage',upload.single('image'),(req,res)=>{
   console.log('서버 연결 성공');
   const id=req.params.member_id;
   const id2=req.body.member_id;
-  console.log('이미지신청자',id.json());
+  console.log('이미지신청자',id);
   console.log('이미지신청자2:',id2);
   if(!req.file){
     return res.status(400).send('파일이 없습니다.');
