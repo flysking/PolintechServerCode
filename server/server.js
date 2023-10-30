@@ -68,6 +68,34 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
   });
   blobStream.end(req.file.buffer);
 });
+app.post('/UploadIdcImage',upload.single('image'),(req,res)=>{
+  console.log('서버 연결 성공');
+  const id=req.params.member_id;
+  console.log('이미지신청자',id);
+  if(!req.file){
+    return res.status(400).send('파일이 없습니다.');
+  }
+  const folderPath = 'ServerImage/'; // 폴더 경로
+  const fileName = id+req.file.originalname; // 파일 이름
+  const filePath = folderPath + fileName; // 전체 파일 경로
+  
+  const file = bucket.file(filePath);
+  const blobStream=file.createWriteStream({
+    metadata:{
+      contentType:req.file.mimetype,
+    },
+  });
+  blobStream.on('error',(err)=>{
+    console.error(err);
+    res.status(500).send('이미지 업로드 중 오류발생');
+  });
+
+  blobStream.on('finish',()=>{
+    res.status(200).json({message:'이미지가 성공적으로 업로드 되었습니다.'});
+  });
+  blobStream.end(req.file.buffer);
+});
+
 app.post('/UploadBoardImage', upload.single('image'), (req, res) => {
   //게시글 이미지(구글 클라우드로 전송)
   console.log('서버 연결 성공');
