@@ -71,12 +71,14 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
 app.post('/UploadIdcImage',upload.single('image'),(req,res)=>{
   console.log('서버 연결 성공');
   const id=req.params.member_id;
-  console.log('이미지신청자',id);
+  const id2=req.body.member_id;
+  console.log('이미지신청자',id.json());
+  console.log('이미지신청자2:',id2);
   if(!req.file){
     return res.status(400).send('파일이 없습니다.');
   }
   const folderPath = 'ServerImage/'; // 폴더 경로
-  const fileName = id+req.file.originalname; // 파일 이름
+  const fileName = id2+req.file.originalname; // 파일 이름
   const filePath = folderPath + fileName; // 전체 파일 경로
   
   const file = bucket.file(filePath);
