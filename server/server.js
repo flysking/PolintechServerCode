@@ -239,7 +239,6 @@ const handleSign = (req, res) => {
     },
   );
 };
-
 app.post('/Sign', handleSign);
 
 const generateRandomVerificationCode = () => {
