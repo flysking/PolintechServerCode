@@ -8,7 +8,6 @@ class MemberDTO {
     member_email,
     member_major,
     member_birth,
-    member_number,
     member_gender,
     member_iscert,
     member_isadmin,
@@ -25,7 +24,6 @@ class MemberDTO {
     this.member_email = member_email;
     this.member_major = member_major;
     this.member_birth = member_birth;
-    this.member_number = member_number;
     this.member_gender = member_gender;
     this.member_iscert = member_iscert;
     this.member_isadmin = member_isadmin;
@@ -45,7 +43,6 @@ class MemberDTO {
       member_email: this.member_email,
       member_major: this.member_major,
       member_birth: this.member_birth,
-      member_number: this.member_number,
       member_gender: this.member_gender,
       member_iscert: this.member_iscert,
       member_isadmin: this.member_isadmin,

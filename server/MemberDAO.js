@@ -135,9 +135,146 @@ const login = (req, res) => {
   });
 };
 
+const updateMember = (
+  pw,
+  nickname,
+  gender,
+) => {
+  const query = 'UPDATE polintech.member SET  member_pw = ?, member_nickname = ?, member_gender = ? WHERE member_id = ?';
+
+  db.query(query, 
+  [
+    pw,
+    nickname,
+    gender,
+  ], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.affectedRows > 0) {
+      const updatedMemberDTO = new MemberDTO({
+        member_pw: pw,
+        member_nickname: nickname,
+        member_gender: gender,
+      });
+
+      callback(null, updatedMemberDTO);
+    } else {
+      callback(null, null);
+    }
+  });
+};
+
+const getMemberByEmail = (id, email, callback) => {
+  // 이메일로 회원을 찾는 쿼리를 작성합니다.
+  const query = 'SELECT member_id FROM polintech.member WHERE member_email = ?';
+
+  db.query(query, [email], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.length > 0) {
+      const memberDTO = new MemberDTO(results[0]);
+      console.log('이메일로 찾은 회원 정보:', results[0]); // 결과 로그 출력
+      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+    } else {
+      callback(null, null); // 에러가 없고, 결과가 없음
+    }
+  });
+};
+
+const getId = (id, callback) => {
+  // 아이디를 찾는 쿼리를 작성합니다.
+  const query = 'SELECT member_id FROM polintech.member WHERE member_id = ?';
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.length > 0) {
+      const memberDTO = new MemberDTO(results[0]);
+      console.log('아이디 확인:', results[0]); // 결과 로그 출력
+      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+    } else {
+      callback(null, null); // 에러가 없고, 결과가 없음
+    }
+  });
+};
+
+const getEmail = (email, callback) => {
+  // 이메일을 찾는 쿼리를 작성합니다.
+  const query = 'SELECT member_email FROM polintech.member WHERE member_email = ?';
+
+  db.query(query, [email], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.length > 0) {
+      const memberDTO = new MemberDTO(results[0]);
+      console.log('아이디 확인:', results[0]); // 결과 로그 출력
+      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+    } else {
+      callback(null, null); // 에러가 없고, 결과가 없음
+    }
+  });
+};
+
+const getPw = (pw, callback) => {
+  // 비밀번호를 찾는 쿼리를 작성합니다.
+  const query = 'SELECT member_pw FROM polintech.member WHERE member_pw = ?';
+
+  db.query(query, [pw], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.length > 0) {
+      const memberDTO = new MemberDTO(results[0]);
+      console.log('비밀번호 확인:', results[0]); // 결과 로그 출력
+      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+    } else {
+      callback(null, null); // 에러가 없고, 결과가 없음
+    }
+  });
+};
+
+const PwUpdate = (pw, newPw, callback) => {
+  // 비밀번호를 업데이트하는 쿼리를 작성합니다.
+  const query = 'UPDATE polintech.member SET member_pw = ? WHERE member_pw = ?';
+
+  db.query(query, [newPw, pw], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (results.affectedRows  > 0) {
+      const memberDTO = new MemberDTO(results[0]);
+      console.log('비밀번호 재설정 확인:', results[0]); // 결과 로그 출력
+      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+    } else {
+      callback(null, null); // 에러가 없고, 결과가 없음
+    }
+  });
+};
 module.exports = {
   getMemberByIdAndPassword,
   login,
   registerMember,
   UpdateIsCert,
+  getMemberByEmail,
+  getId,
+  getEmail,
+  getPw,
+  updateMember,
+  PwUpdate,
 };

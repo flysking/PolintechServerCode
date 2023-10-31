@@ -323,7 +323,126 @@ const handleFindIdByEmail = (req, res) => {
   });
 };
 
-app.post('/findId', handleFindIdByEmail);
+app.post('/findIdByEmail', handleFindIdByEmail);
+
+//아이디 찾기
+const handleFindId = (req, res) => {
+  const { id } = req.body;
+
+  MemberDAO.getId(id, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('아이디 등록 확인:', memberDTO.member_id);
+
+      res.json({
+        success: true,
+        member: {
+          id: memberDTO.member_id,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/findId', handleFindId);
+
+//이메일 찾기
+const handleFindEmail = (req, res) => {
+  const { email } = req.body;
+
+  MemberDAO.getEmail(email, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('이메일 등록 확인:', memberDTO.member_email);
+
+      res.json({
+        success: true,
+        member: {
+          email: memberDTO.member_email,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/findEmail', handleFindEmail);
+
+//비밀번호 찾기
+const handleFindPw = (req, res) => {
+  const { pw } = req.body;
+
+  MemberDAO.getPw(pw, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('비밀번호 일치 확인:', memberDTO.member_pw);
+
+      res.json({
+        success: true,
+        member: {
+          pw: memberDTO.member_pw,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/findPw', handleFindPw);
+
+//비밀번호 업데이트
+const handlePwUpdate = (req, res) => {
+  const { pw, newPw } = req.body;
+  console.log("업데이트 확인:", req.body);
+
+  MemberDAO.PwUpdate(pw, newPw, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('비밀번호 재설정 확인:', memberDTO.member_pw);
+
+      res.json({
+        success: true,
+        member: {
+          pw: memberDTO.member_pw,
+          newPw: memberDTO.member_pw,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/PwUpdate', handlePwUpdate);
+
 //-------------------
 //--------게시글 관련-----------
 app.get('/BoardList', (req, res) => {
