@@ -444,6 +444,7 @@ app.post('/PwUpdate', handlePwUpdate);
 
 //-------------------
 //--------게시글 관련-----------
+app.post('/CreateBoard', BoardDAO.CreateBoard);
 app.get('/BoardList', (req, res) => {
   //게시글 목록 조회
   BoardDAO.BoardList((error, boards) => {
