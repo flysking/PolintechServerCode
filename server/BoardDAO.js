@@ -128,6 +128,23 @@ const BoardList = callback => {
     callback(null, boards);
   });
 };
+const BoardListByCategory = (category, callback) => {
+  //게시글 목록
+  const query =
+    'select board.*, member.member_nickname from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' where board.board_category=? order by board.board_id desc';
+
+  db.query(query,[category], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const boards = results.map(boardData => new BoardDTO(boardData));
+    callback(null, boards);
+  });
+};
 
 const BoardHitsUpdate = (boardId, callback) => {
   //조회수 증가
@@ -150,4 +167,5 @@ module.exports = {
   BoardHitsUpdate,
   EditBoard,
   BoardDelete,
+  BoardListByCategory,
 };

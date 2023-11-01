@@ -457,6 +457,20 @@ app.get('/BoardList', (req, res) => {
     console.log('게시글 출력', boards);
   });
 });
+app.get('/BoardList/:category', (req, res) => {
+  //게시글 목록 조회
+  const category=req.params.category;
+  BoardDAO.BoardListByCategory(category,(error, boards) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({success: false});
+      return;
+    }
+    res.json({success: true, boards});
+    console.log('게시글 출력', boards);
+  });
+});
+
 app.get('/BoardHitsUpdate/:boardId', (req, res) => {
   // 조회수 증가
   const boardId = req.params.boardId;
