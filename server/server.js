@@ -149,11 +149,29 @@ app.post('/UpdateIsCert',MemberDAO.UpdateIsCert);
 app.post('/UploadIdc',IdcDAO.IdcUpload);
 
 app.get('/SearchIdc/:member_Id', (req, res) => {
-  //게시글 상세보기
+  //학생증 검색
+  const member_id = req.params.member_Id;
+  console.log(member_id);
+
+  IdcDAO.SearchIdc(member_id, (error, idc) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '학생증 조회 중 오류가 발생했습니다.'});
+      return; // 추가: 오류 발생 시 더 이상 진행되지 않도록
+    }else{
+      res.json({success: true, idc: idc });
+      // 응답
+    }
+    });
+});
+
+app.get('/MyIdc/:member_Id', (req, res) => {
+  //내가 신청한 학생증 확인
   const member_id = req.params.member_Id;
   console.log(member_id);
   // 게시글 상세보기
-  IdcDAO.SearchIdc(member_id, (error, idc) => {
+  IdcDAO.MyIdc(member_id, (error, idc) => {
     if (error) {
       res
         .status(500)
