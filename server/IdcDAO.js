@@ -21,14 +21,14 @@ const SearchIdc = (member_id, callback) => {
 
   const MyIdc = (member_id, callback) => {
     const query =
-    'select *, member_name from polintech.studentidc join polintech.member on studentidc.idc_mid=member.member_id where idc_mid=?';
+    'select *, member_name from polintech.studentidc join polintech.member on studentidc.idc_mid=member.member_id where idc_mid=? and idc_isaccept=1';
     db.query(query, [member_id], (error, results) => {
       if (error) {
         callback(error, null);
         return;
       }
       if (results.length === 0) {
-        callback(new Error(member_id,' 회원의학생증을 조회할 수 없습니다.'), null);
+        callback(new Error(member_id,' 학생증 발급 대기중인 유저.'), null);
         return;
       }
       const idc = new IdcDTO(results[0]);
