@@ -3,7 +3,7 @@ const IdcDTO=require('./IdcDTO');
 
 const SearchIdc = (member_id, callback) => {
     const query =
-    'select * from studentidc where idc_mid=? and idc_isaccept=0';
+    'select * from studentidc where idc_mid=? ';
     db.query(query, [member_id], (error, results) => {
       if (error) {
         callback(error, null);
