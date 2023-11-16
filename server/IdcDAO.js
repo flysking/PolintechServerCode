@@ -21,7 +21,7 @@ const SearchIdc = (member_id, callback) => {
 
   const MyIdc = (member_id, callback) => {
     const query =
-    'select *, member_name from polintech.studentidc join polintech.member on studentidc.idc_mid=member.member_id where idc_mid=? and idc_isaccept=1';
+    'select * from studentidc join member on studentidc.idc_mid=member.member_id join major on member.member_major=major.major_id where studentidc.idc_mid=? and idc_isaccept=1';
     db.query(query, [member_id], (error, results) => {
       if (error) {
         callback(error, null);
