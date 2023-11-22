@@ -9,6 +9,7 @@ class BoardDTO {
     board_subcategory,
     board_postdate,
     member_nickname,
+    member_name,
   }) {
     this.board_id = board_id;
     this.board_title = board_title;
@@ -19,6 +20,7 @@ class BoardDTO {
     this.board_subcategory = board_subcategory;
     this.board_postdate = board_postdate;
     this.member_nickname = member_nickname;
+    this.member_name=member_name;
   }
   toJSON() {
     return {
@@ -31,6 +33,7 @@ class BoardDTO {
       board_subcategory: this.board_subcategory,
       board_postdate: this.board_postdate,
       member_nickname: this.member_nickname,
+      member_name:this.member_name,
     };
   }
 }

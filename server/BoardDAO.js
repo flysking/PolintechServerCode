@@ -82,7 +82,7 @@ const EditBoard = (req, res, next) => {
 
 const BoardDetail = (boardId, callback) => {
   const query =
-    'select board.*, member.member_nickname from polintech.board' +
+    'select board.*, member.member_nickname,member.member_name from polintech.board' +
     ' join polintech.member on board.board_mid = member.member_id' +
     ' where board_id = ?';
 
@@ -114,7 +114,7 @@ const BoardDelete = (boardId, callback) => {
 const BoardList = callback => {
   //게시글 목록
   const query =
-    'select board.*, member.member_nickname from polintech.board' +
+    'select board.*, member.member_nickname,member.member_name from polintech.board' +
     ' join polintech.member on board.board_mid = member.member_id' +
     ' order by board.board_id desc';
 
@@ -131,7 +131,7 @@ const BoardList = callback => {
 const BoardListByCategory = (category, callback) => {
   //게시글 목록
   const query =
-    'select board.*, member.member_nickname from polintech.board' +
+    'select board.*, member.member_nickname,member.member_name from polintech.board' +
     ' join polintech.member on board.board_mid = member.member_id' +
     ' where board.board_category=? order by board.board_id desc';
 
@@ -140,7 +140,6 @@ const BoardListByCategory = (category, callback) => {
       callback(error, null);
       return;
     }
-
     const boards = results.map(boardData => new BoardDTO(boardData));
     callback(null, boards);
   });
