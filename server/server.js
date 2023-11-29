@@ -489,6 +489,25 @@ app.get('/BoardList/:category', (req, res) => {
   });
 });
 
+app.post('/BoardSearchList', (req, res) => {
+  //게시글 검색
+  const word = req.body.word;
+  const subcategory = req.body.subcategory;
+  const category = req.body.category;
+  console.log('입력 단어 : ', word);
+  console.log('subCategory : ', subcategory);
+  console.log('카테고리 : ', category);
+  BoardDAO.BoardSearch(category, subcategory, word, (error, boards) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({success: false});
+      return;
+    }
+    res.json({success: true, boards});
+    console.log('게시글 출력', boards);
+  });
+});
+
 app.get('/BoardHitsUpdate/:boardId', (req, res) => {
   // 조회수 증가
   const boardId = req.params.boardId;

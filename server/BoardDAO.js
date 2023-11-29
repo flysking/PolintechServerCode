@@ -145,6 +145,64 @@ const BoardListByCategory = (category, callback) => {
   });
 };
 
+const BoardSearch = (category, subcategory, word, callback) => {
+  let query = '';
+  const searchTerm = `%${word}%`;
+  let query_category = 'WHERE board.board_category = ? AND';
+
+  if (category == '전체') {
+    query_category = 'WHERE';
+  }
+  if (subcategory === 'title') {
+    console.log('제목에서 검색'); // 제목에서 검색
+
+    query =
+      'SELECT board.*, member.member_nickname ' +
+      'FROM polintech.board ' +
+      'JOIN polintech.member ON board.board_mid = member.member_id ' +
+      query_category +
+      ' board.board_title LIKE ? ' +
+      'ORDER BY board.board_postdate DESC';
+  } else if (subcategory === 'content') {
+    console.log('본문에서 검색'); // 본문에서 검색
+    query =
+      'SELECT board.*, member.member_nickname ' +
+      'FROM polintech.board ' +
+      'JOIN polintech.member ON board.board_mid = member.member_id ' +
+      query_category +
+      ' board.board_content LIKE ? ' +
+      'ORDER BY board.board_postdate DESC';
+  }
+  if (category == '전체') {
+    db.query(query, searchTerm, (error, results) => {
+      console.log('query : ', query);
+      console.log('query_category : ', query_category);
+      console.log('searchTerm : ', searchTerm);
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      const boards = results.map(boardData => new BoardDTO(boardData));
+      console.log(boards);
+      callback(null, boards);
+    });
+  } else {
+    db.query(query, [category, searchTerm], (error, results) => {
+      console.log('query : ', query);
+      console.log('query_category : ', query_category);
+      console.log('searchTerm : ', searchTerm);
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      const boards = results.map(boardData => new BoardDTO(boardData));
+      console.log(boards);
+      callback(null, boards);
+    });
+  }
+};
+
+
 const BoardHitsUpdate = (boardId, callback) => {
   //조회수 증가
   const query =
@@ -167,4 +225,5 @@ module.exports = {
   EditBoard,
   BoardDelete,
   BoardListByCategory,
+  BoardSearch,
 };
