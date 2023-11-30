@@ -6,7 +6,7 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
   //로그인
   const query =
     'SELECT * FROM polintech.member join polintech.major'
-    +' on member.member_major=major.major_id WHERE member_id = ? AND member_pw = ?';
+    +' on member.member_major=major.major_id WHERE member_id = ?';
 
   db.query(query, [id, pw], (error, results) => {
     if (error) {
