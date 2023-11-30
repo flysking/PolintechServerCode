@@ -144,7 +144,43 @@ const BoardListByCategory = (category, callback) => {
     callback(null, boards);
   });
 };
+//공지사항 조회
+const BoardListNotice = callback => {
+  //게시글 목록
+  const query =
+    'select board.*, member.member_nickname,member.member_name from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' where board_subcategory="공지" order by board.board_id desc';
 
+  db.query(query, (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const boards = results.map(boardData => new BoardDTO(boardData));
+    callback(null, boards);
+  });
+};
+const BoardListPopular = callback => {
+  //게시글 목록
+  const query =
+    'select board.*, member.member_nickname,member.member_name, COUNT(boardlikes.boardlikes_bid) AS like_count from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' join polintech.boardlikes ON board.board_id = boardlikes.boardlikes_bid' +
+    ' group by board.board_id, member.member_nickname, member.member_name'+
+    ' order by board.board_id desc';
+
+  db.query(query, (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const boards = results.map(boardData => new BoardDTO(boardData));
+    callback(null, boards);
+  });
+};
 const BoardSearch = (category, subcategory, word, callback) => {
   let query = '';
   const searchTerm = `%${word}%`;
@@ -224,6 +260,8 @@ module.exports = {
   BoardHitsUpdate,
   EditBoard,
   BoardDelete,
+  BoardListNotice,
+  BoardListPopular,
   BoardListByCategory,
   BoardSearch,
 };

@@ -10,6 +10,7 @@ class BoardDTO {
     board_postdate,
     member_nickname,
     member_name,
+    like_count,
   }) {
     this.board_id = board_id;
     this.board_title = board_title;
@@ -21,6 +22,7 @@ class BoardDTO {
     this.board_postdate = board_postdate;
     this.member_nickname = member_nickname;
     this.member_name=member_name;
+    this.like_count=like_count;
   }
   toJSON() {
     return {
@@ -34,6 +36,7 @@ class BoardDTO {
       board_postdate: this.board_postdate,
       member_nickname: this.member_nickname,
       member_name:this.member_name,
+      like_count:this.like_count,
     };
   }
 }

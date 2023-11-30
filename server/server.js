@@ -475,6 +475,31 @@ app.get('/BoardList', (req, res) => {
     console.log('게시글 출력', boards);
   });
 });
+app.get('/BoardListNotice', (req, res) => {
+  //게시글 목록 조회
+  BoardDAO.BoardListNotice((error, boards) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({success: false});
+      return;
+    }
+    res.json({success: true, boards});
+    console.log('게시글 출력', boards);
+  });
+});
+app.get('/BoardListPopular', (req, res) => {
+  //게시글 목록 조회
+  BoardDAO.BoardListPopular((error, boards) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({success: false});
+      return;
+    }
+    res.json({success: true, boards});
+    console.log('게시글 출력', boards);
+  });
+});
+
 app.get('/BoardList/:category', (req, res) => {
   //게시글 목록 조회
   const category=req.params.category;
