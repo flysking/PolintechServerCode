@@ -105,7 +105,7 @@ const DeleteComment = (commentId, callback) => {
 // };
 const CommentList = (boardId, callback) => {
   const query =
-    'SELECT comment.* ,member.member_nickname FROM polintech.comment' +
+    'SELECT comment.* ,member.member_nickname,member_name FROM polintech.comment' +
     ' JOIN polintech.member on comment.comment_mid  = member.member_id ' +
     ' WHERE comment_bid = ? ORDER BY comment_id DESC';
 
