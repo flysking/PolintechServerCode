@@ -7,6 +7,7 @@ class ReplyDTO {
     reply_bid,
     reply_postdate,
     member_nickname,
+    member_name,
   }) {
     this.reply_id = reply_id;
     this.reply_cid = reply_cid;
@@ -15,6 +16,7 @@ class ReplyDTO {
     this.reply_bid = reply_bid;
     this.reply_postdate = reply_postdate;
     this.member_nickname = member_nickname;
+    this.member_name=member_name;
   }
 
   toJSON() {
@@ -26,6 +28,7 @@ class ReplyDTO {
       reply_bid: this.reply_bid,
       reply_postdate: this.reply_postdate,
       member_nickname: this.member_nickname,
+      member_name:this.member_name,
     };
   }
 }
