@@ -169,7 +169,7 @@ const BoardListPopular = callback => {
     ' join polintech.member on board.board_mid = member.member_id' +
     ' join polintech.boardlikes ON board.board_id = boardlikes.boardlikes_bid' +
     ' group by board.board_id, member.member_nickname, member.member_name'+
-    ' order by board.board_id desc';
+    ' order by like_count desc';
 
   db.query(query, (error, results) => {
     if (error) {
@@ -208,7 +208,7 @@ const BoardListPopularByCate = (category,callback) => {
     ' join polintech.boardlikes ON board.board_id = boardlikes.boardlikes_bid' +
     ' where board_category=?'+
     ' group by board.board_id, member.member_nickname, member.member_name'+
-    ' order by board.board_id desc';
+    ' order by like_count desc';
 
   db.query(query,[category], (error, results) => {
     if (error) {
