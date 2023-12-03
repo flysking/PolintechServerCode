@@ -133,6 +133,7 @@ const login = (req, res) => {
           isAdmin: memberDTO.member_isadmin,
           grade: memberDTO.member_grade,
           majorname:memberDTO.major_name,
+          profile:memberDTO.member_profile,
         },
       });
     } else {
