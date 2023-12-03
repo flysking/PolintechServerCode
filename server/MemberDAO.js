@@ -15,6 +15,7 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
     }
 
     if (results.length > 0) {
+      //비밀번호 복호화 
       const hashedPassword = results[0].member_pw;
       bcrypt.compare(pw, hashedPassword, (err, res) => {
         if (res) {
@@ -141,12 +142,43 @@ const login = (req, res) => {
     }
   });
 };
+const UpdateMemberInfo=(req,res) =>{
+  const updateData=req.body;
+  const query='update polintech.member set member_nickname=?, member_email=?, member_engname=? where member_id=?';
+  db.query(query,[updateData.member_nickname,updateData.member_email,updateData.member_engname,updateData.member_id],
+    (error,results)=>{
+    if(error){
+      res.json({error:'업데이트 중 데이터베이스 오류 발생.'});
+      return;
+    }
+    res.json({
+      success:true,
+    });
+    
+  });
+};
+const UpdateProfile=(req,res) =>{
+  const updateData=req.body;
+  const query='update polintech.member set member_profile=? where member_id=?';
+  db.query(query,[updateData.member_profile,updateData.member_id],
+    (error,results)=>{
+    if(error){
+      res.json({error:'업데이트 중 데이터베이스 오류 발생.'});
+      return;
+    }
+    res.json({
+      success:true,
+    });
+    
+  });
+};
+
 const updateMember = (
   pw,
   nickname,
   gender,
 ) => {
-  const query = 'UPDATE polintech.member SET  member_pw = ?, member_nickname = ?, member_gender = ? WHERE member_id = ?';
+  const query = 'UPDATE polintech.member SET member_pw = ?, member_nickname = ?, member_gender = ? WHERE member_id = ?';
 
   db.query(query, 
   [
@@ -192,7 +224,6 @@ const getMemberByEmail = (id, email, callback) => {
     }
   });
 };
-
 const getId = (id, callback) => {
   // 아이디를 찾는 쿼리를 작성합니다.
   const query = 'SELECT member_id FROM polintech.member WHERE member_id = ?';
@@ -293,7 +324,7 @@ const PwUpdate = (pw, newPw, callback) => {
   });
 };
 
-const PwUpdateIsLogout = (id, newPw, callback) => {
+const PwUpdateIsLogginedOut = (id, newPw, callback) => {
   // 비로그인 상태에서 비밀번호를 업데이트하는 쿼리를 작성합니다.
   const query = 'UPDATE polintech.member SET member_pw = ? WHERE member_id = ?';
 
@@ -311,7 +342,7 @@ const PwUpdateIsLogout = (id, newPw, callback) => {
       callback(null, null); // 에러가 없고, 결과가 없음
     }
   });
-}
+};
 module.exports = {
   getMemberByIdAndPassword,
   login,
@@ -323,5 +354,8 @@ module.exports = {
   getPw,
   updateMember,
   PwUpdate,
-  PwUpdateIsLogout,
+  PwUpdateIsLogginedOut,
+  getPwIsLogginedOut,
+  UpdateMemberInfo,
+  UpdateProfile,
 };

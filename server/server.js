@@ -185,14 +185,8 @@ app.get('/MyIdc/:member_Id', (req, res) => {
 });
 //----------------------------
 //----로그인/회원가입 관련---------
-app.post('/login', MemberDAO.login);
 
-app.post('/logout', (req, res) => {
-  //아직은 사용x
-  //현재 세션 말고 다른방식으로 로그아웃 구현됨
-  req.session.destroy(); // 세션 파기
-  res.json({success: true});
-});
+app.post('/login', MemberDAO.login);
 
 const handleSign = (req, res) => {
   console.log("server:",req.body);
@@ -259,6 +253,11 @@ const handleSign = (req, res) => {
 };
 app.post('/Sign', handleSign);
 
+app.post('/UpdateMember',MemberDAO.UpdateMemberInfo);
+app.post('/UpdateProfile',MemberDAO.UpdateProfile);
+
+
+
 const generateRandomVerificationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -267,7 +266,8 @@ const verificationCode = generateRandomVerificationCode();
 
 app.post('/EmailAuth', async (req, res) => {
   const { userEmail } = req.body;
-  
+  verificationCode = generateRandomVerificationCode(); // 새로운 코드 생성
+
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -277,20 +277,31 @@ app.post('/EmailAuth', async (req, res) => {
   });
 
   try {
-
     const mailOptions = {
-      from: '폴인텍',
+      from: '폴인텍 <polintechnoreply@gmail.com>',
       to: userEmail,
       subject: '폴인텍 회원가입 인증번호',
-      text: verificationCode,
+      html: `
+        <html>
+          <head>
+            <div style="text-align: center;">
+            <img src="../image/Logo" alt="폴인텍 로고">
+          </head>
+          <body>
+            <div style="text-align: center;">
+              <p>${verificationCode}</p>
+            </div>
+          </body>
+        </html>
+      `,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error sending email:', error);
+        console.error('이메일 전송 오류:', error);
         res.status(500).send('메일 전송 실패');
       } else {
-        console.log('Email sent:', info.response);
+        console.log('이메일 전송:', info.response);
         res.status(200).send('메일 전송 성공!');
       }
     });
@@ -300,7 +311,13 @@ app.post('/EmailAuth', async (req, res) => {
   }
 });
 
-//이메일 인증 확인
+//인증코드 초기화
+app.post('/ClearVerificationCode', (req, res) => {
+  verificationCode = '';
+  res.status(200).send('인증코드 초기화됨');
+});
+
+//이메일 인증 코드 확인
 app.post('/AuthCheck', (req, res) => {
   const { authCheck } = req.body;
 
@@ -325,13 +342,12 @@ const handleFindIdByEmail = (req, res) => {
     if (memberDTO) {
       console.log('이메일로 찾은 회원 정보:', memberDTO.member_id);
 
-      // 여기에서 필요한 회원 정보를 클라이언트로 전달합니다.
+      // 클라이언트에게 찾은 정보 전달
       res.json({
         success: true,
         member: {
           id: memberDTO.member_id,
           email: memberDTO.member_email,
-          // 다른 필드도 추가할 수 있습니다.
         },
       });
     } else {
@@ -360,7 +376,6 @@ const handleFindId = (req, res) => {
         success: true,
         member: {
           id: memberDTO.member_id,
-          // 다른 필드도 추가할 수 있습니다.
         },
       });
     } else {
@@ -389,7 +404,6 @@ const handleFindEmail = (req, res) => {
         success: true,
         member: {
           email: memberDTO.member_email,
-          // 다른 필드도 추가할 수 있습니다.
         },
       });
     } else {
@@ -428,6 +442,36 @@ const handleFindPw = (req, res) => {
 };
 
 app.post('/findPw', handleFindPw);
+//비로그인 상태에서 찾기
+//비로그인 상태에서 비밀번호 찾기
+const handleFindPwIdLogginedOut = (req, res) => {
+  const { id } = req.body;
+
+  MemberDAO.getPwIsLogginedOut(id, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('비밀번호 일치 확인:', memberDTO.member_id);
+
+      res.json({
+        success: true,
+        member: {
+          id: memberDTO.member_id,
+          pw: memberDTO.member_pw,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/findPwIsLogginedOut', handleFindPwIdLogginedOut);
 
 //비밀번호 업데이트
 const handlePwUpdate = (req, res) => {
@@ -457,6 +501,39 @@ const handlePwUpdate = (req, res) => {
     }
   });
 };
+
+app.post('/PwUpdate', handlePwUpdate);
+
+//비로그인 비밀번호 업데이트
+const handlePwUpdateIsLogginedOut = (req, res) => {
+  const { id, newPw } = req.body;
+  console.log("업데이트 확인:", req.body);
+
+  MemberDAO.PwUpdateIsLogginedOut(id, newPw, (error, memberDTO) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ success: false });
+      return;
+    }
+
+    if (memberDTO) {
+      console.log('비밀번호 재설정 확인:', memberDTO.member_pw);
+
+      res.json({
+        success: true,
+        member: {
+          id: memberDTO.member_id,
+          newPw: memberDTO.member_pw,
+          // 다른 필드도 추가할 수 있습니다.
+        },
+      });
+    } else {
+      res.json({ success: false });
+    }
+  });
+};
+
+app.post('/PwUpdateIsLogginedOut', handlePwUpdateIsLogginedOut);
 
 app.post('/PwUpdate', handlePwUpdate);
 

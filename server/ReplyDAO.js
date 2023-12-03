@@ -96,7 +96,7 @@ const DeleteReply = (replyId, callback) => {
 
 const ReplyList = (boardId, callback) => {
   const query =
-    'SELECT reply.*,member.member_nickname FROM polintech.reply' +
+    'SELECT reply.*,member.member_nickname,member.member_name FROM polintech.reply' +
     ' JOIN polintech.member ON reply.reply_mid= member.member_id ' +
     'WHERE reply_bid = ? ORDER BY reply_id';
 
