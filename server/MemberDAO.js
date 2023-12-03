@@ -145,7 +145,7 @@ const login = (req, res) => {
 const UpdateMemberInfo=(req,res) =>{
   const updateData=req.body;
   const query='update polintech.member set member_nickname=?, member_email=?, member_engname=? where member_id=?';
-  db.query(query,[updateData.member_nickname,updateData.member_email,updateData.member_engname,updateData.member_id],
+  db.query(query,[updateData.newNickname,updateData.newEmail,updateData.newEngname,updateData.member_id],
     (error,results)=>{
     if(error){
       res.json({error:'업데이트 중 데이터베이스 오류 발생.'});
