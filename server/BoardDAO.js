@@ -181,6 +181,45 @@ const BoardListPopular = callback => {
     callback(null, boards);
   });
 };
+
+//카테고리별 공지와 인기글
+const BoardListNoticeByCate = (category, callback) => {
+  //게시글 목록
+  const query =
+    'select board.*, member.member_nickname,member.member_name from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' where board_category=? and board_subcategory="공지" order by board.board_id desc';
+
+  db.query(query,[category], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const boards = results.map(boardData => new BoardDTO(boardData));
+    callback(null, boards);
+  });
+};
+const BoardListPopularByCate = (category,callback) => {
+  //게시글 목록
+  const query =
+    'select board.*, member.member_nickname,member.member_name, COUNT(boardlikes.boardlikes_bid) AS like_count from polintech.board' +
+    ' join polintech.member on board.board_mid = member.member_id' +
+    ' join polintech.boardlikes ON board.board_id = boardlikes.boardlikes_bid' +
+    ' where board_category=?'+
+    ' group by board.board_id, member.member_nickname, member.member_name'+
+    ' order by board.board_id desc';
+
+  db.query(query,[category], (error, results) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const boards = results.map(boardData => new BoardDTO(boardData));
+    callback(null, boards);
+  });
+};
 const BoardSearch = (category, subcategory, word, callback) => {
   let query = '';
   const searchTerm = `%${word}%`;
@@ -264,4 +303,6 @@ module.exports = {
   BoardListPopular,
   BoardListByCategory,
   BoardSearch,
+  BoardListNoticeByCate,
+  BoardListPopularByCate,
 };
