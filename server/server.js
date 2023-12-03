@@ -593,7 +593,7 @@ app.get('/BoardList/:category', (req, res) => {
 app.get('/BoardListNoticeByCate/:category', (req, res) => {
   //게시글 목록 조회
   const category=req.params.category;
-  BoardDAO.BoardListNotice(category,(error, boards) => {
+  BoardDAO.BoardListNoticeByCate(category,(error, boards) => {
     if (error) {
       console.error(error);
       res.status(500).json({success: false});
@@ -606,7 +606,7 @@ app.get('/BoardListNoticeByCate/:category', (req, res) => {
 app.get('/BoardListPopularByCate/:category', (req, res) => {
   //게시글 목록 조회
   const category=req.params.category;
-  BoardDAO.BoardListPopular(category,(error, boards) => {
+  BoardDAO.BoardListPopularByCate(category,(error, boards) => {
     if (error) {
       console.error(error);
       res.status(500).json({success: false});
