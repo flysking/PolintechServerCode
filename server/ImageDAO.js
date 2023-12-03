@@ -112,6 +112,25 @@ const UploadBoardImageToDB = (req, res) => {
       }
     });
   };
+  const ReturnIdcImage = (member_id, callback) => {
+    //이미지 확인
+    console.log(member_id);
+    const query = 'select * from polintech.image where image_mid = ? and image_category="학생증" order by image_id desc limit 1';
+    db.query(query, [member_id], (error, results) => {
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      if (results.length > 0) {
+        const image = new ImageDTO(results[0]);
+        console.log('이미지 데이터(DB) ', image);
+        callback(null, image);
+      } else {
+        console.log('일치하는 이미지가 없습니다.');
+        callback(null, null);
+      }
+    });
+  };
   
 
 
@@ -120,4 +139,5 @@ module.exports={
     UploadBoardImageToDB,
     UpdateBoardImageToDB,
     imageCheck,
+    ReturnIdcImage,
 };

@@ -180,6 +180,20 @@ app.get('/MyIdc/:member_Id', (req, res) => {
     }
     });
 });
+//학생증 이미지 찾기
+app.get('/ReturnIdcImage/:member_id', (req, res) => {
+  const member_id = req.params.member_id;
+  ImageDAO.ReturnIdcImage(member_id, (error, imageData) => {
+    if (error) {
+      res
+        .status(500)
+        .json({error: '데이터베이스 오류가 발생하였습니다(이미지 조회).'});
+      return;
+    }
+    console.log('imageData(server) : ', imageData);
+    res.json({success: true, imageData});
+  });
+});
 //----------------------------
 //----로그인/회원가입 관련---------
 
