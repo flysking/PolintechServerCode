@@ -297,7 +297,7 @@ app.post('/EmailAuth', async (req, res) => {
         <html>
           <head>
             <div style="text-align: center;">
-            <img src="../image/Logo" alt="폴인텍 로고">
+            <img src="https://storage.googleapis.com/polintech_image/AppImage/Logo_original.png" alt="폴인텍 로고">
           </head>
           <body>
             <div style="text-align: center;">
