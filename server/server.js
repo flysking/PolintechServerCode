@@ -276,6 +276,7 @@ const generateRandomVerificationCode = () => {
 const verificationCode = generateRandomVerificationCode();
 
 app.post('/EmailAuth', async (req, res) => {
+  console.log('이메일 인증 실행');
   const { userEmail } = req.body;
   verificationCode = generateRandomVerificationCode(); // 새로운 코드 생성
 
@@ -308,6 +309,7 @@ app.post('/EmailAuth', async (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
+      console.log('이메일 전송 실행');
       if (error) {
         console.error('이메일 전송 오류:', error);
         res.status(500).send('메일 전송 실패');
