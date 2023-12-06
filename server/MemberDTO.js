@@ -16,7 +16,7 @@ class MemberDTO {
     member_grade,
     major_name,
     member_profile,
-  }) {
+  } = []) {
     this.member_id = member_id;
     this.member_pw = member_pw;
     this.member_name = member_name;
