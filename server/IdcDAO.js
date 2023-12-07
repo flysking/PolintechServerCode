@@ -10,7 +10,7 @@ const SearchIdc = (member_id, callback) => {
         return;
       }
       if (results.length === 0) {
-        callback(new Error(member_id,' 회원의학생증을 조회할 수 없습니다.'), null);
+        callback(new Error(member_id,' 회원의 학생증을 조회할 수 없습니다.'), null);
         return;
       }
       const idc = new IdcDTO(results[0]);
@@ -19,9 +19,11 @@ const SearchIdc = (member_id, callback) => {
     });
   };
 
+  //학과명을 담을 수 있도록 join을 사용해 발급된 학생증 정보를 불러옵니다.
   const MyIdc = (member_id, callback) => {
     const query =
-    'select * from studentidc join member on studentidc.idc_mid=member.member_id join major on member.member_major=major.major_id where studentidc.idc_mid=? and idc_isaccept=1';
+    'select * from studentidc join member on studentidc.idc_mid=member.member_id' 
+    +' join major on member.member_major=major.major_id where studentidc.idc_mid=? and idc_isaccept=1';
     db.query(query, [member_id], (error, results) => {
       if (error) {
         callback(error, null);

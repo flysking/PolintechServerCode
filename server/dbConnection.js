@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-
+//mysql 데이터베이스의 정보를 적습니다.
 const db = mysql.createConnection({
   host: '34.64.181.70',
   user: 'flysking59',

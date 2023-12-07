@@ -31,6 +31,7 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
     }
   });
 };
+//재학생 인증 처리
 const UpdateIsCert=(req,res)=>{
   const member_id = req.body;
   if(!member_id.member_id){
@@ -61,6 +62,8 @@ const registerMember = (
   grade, req, callback,
 ) => {
   //회원가입
+
+  //비밀번호 복호화 로직
   bcrypt.hash(pw, 10, (err, pw) => {
   if (err) {
       callback(err, null);
@@ -142,8 +145,10 @@ const login = (req, res) => {
     }
   });
 };
+//유저의 정보 업데이트하기
 const UpdateMemberInfo=(req,res) =>{
   const updateData=req.body;
+  //기존 유저 정보를 updateData에 받아온 새 값으로 업데이트합니다.
   const query='update polintech.member set member_nickname=?, member_email=?, member_engname=? where member_id=?';
   db.query(query,[updateData.newNickname,updateData.newEmail,updateData.newEngname,updateData.member_id],
     (error,results)=>{
@@ -159,6 +164,7 @@ const UpdateMemberInfo=(req,res) =>{
 };
 const UpdateProfile=(req,res) =>{
   const updateData=req.body;
+  //프로필 이미지 이름을 받아와 프로필 사진을 업데이트 해줍니다.
   const query='update polintech.member set member_profile=? where member_id=?';
   db.query(query,[updateData.member_profile,updateData.member_id],
     (error,results)=>{
@@ -172,7 +178,7 @@ const UpdateProfile=(req,res) =>{
     
   });
 };
-
+//유저의 비밀번호를 업데이트합니다.
 const updateMember = (
   pw,
   nickname,
@@ -265,7 +271,7 @@ const getEmail = (email, callback) => {
 };
 
 const getPw = (pw, callback) => {
-  // 비밀번호를 찾는 쿼리를 작성합니다.
+  // 로그인 상태에서 비밀번호를 찾는 쿼리를 작성합니다.
   const query = 'SELECT member_pw FROM polintech.member WHERE member_pw = ?';
 
   db.query(query, [pw], (error, results) => {
@@ -275,16 +281,23 @@ const getPw = (pw, callback) => {
     }
 
     if (results.length > 0) {
-      const memberDTO = new MemberDTO(results[0]);
-      console.log('비밀번호 확인:', results[0]); // 결과 로그 출력
-      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+      const hashedPassword = results[0].member_pw;
+      bcrypt.compare(pw, hashedPassword, (err, res) => {
+        if (res) {
+          const memberDTO = new MemberDTO(results[0]);
+          console.log('비밀번호 확인:', results[0]); // 쿼리 결과 로그 출력
+          callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+        } else {
+          callback(null, null); // 일치하지 않을 때
+        }
+      });
     } else {
       callback(null, null); // 에러가 없고, 결과가 없음
     }
   });
 };
 
-const getPwIsLogginedOut = (id, callback) => {
+const getPwIsLogginedOut = (id, newPw, callback) => {
   // 비로그인 상태에서 비밀번호를 찾는 쿼리를 작성합니다.
   const query = 'SELECT member_pw FROM polintech.member WHERE member_id = ?';
 
@@ -295,9 +308,16 @@ const getPwIsLogginedOut = (id, callback) => {
     }
 
     if (results.length > 0) {
-      const memberDTO = new MemberDTO(results[0]);
-      console.log('비밀번호 확인:', results[0]); // 결과 로그 출력
-      callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+      const hashedPassword = results[0].member_pw;
+      bcrypt.compare(newPw, hashedPassword, (err, res) => {
+        if (res) {
+          const memberDTO = new MemberDTO(results[0]);
+          console.log('비밀번호 확인:', results[0]); // 쿼리 결과 로그 출력
+          callback(null, memberDTO); // 에러가 없고, DTO 객체 반환
+        } else {
+          callback(null, null); // 일치하지 않을 때
+        }
+      });
     } else {
       callback(null, null); // 에러가 없고, 결과가 없음
     }

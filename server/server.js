@@ -23,25 +23,16 @@ const db = require('./dbConnection'); // DB 연결 모듈 가져오기
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(
-  //세션을 사용한다는 함수 다만 현재 사용x
-  session({
-    secret: '1234',
-    resave: false,
-    saveUninitialized: true,
-  }),
-);
-
 //------이미지 관련---------------
-////구글 클라우드 업로드
+//구글 클라우드에 이미지를 업로드 하기 위해 보안키 파일을 프로젝트 내에 저장해두었습니다.
 const storage=new Storage({
   projectId:'groovy-smithy-402915',
   keyFilename:'./server/groovy-smithy-402915-06f6145216d9.json',
 });
-
+//구글 클라우드 스토리지에 polintec_image 라는 이름을 지닌 버킷을 생성해두었습니다.
 const bucket=storage.bucket('polintech_image');
 const upload=multer({
-  storage:multer.memoryStorage(),
+  storage:multer.memoryStorage(), //multer를 이용해 업로드할 데이터를 담아둡니다.
 });
 app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
   console.log('서버 연결 성공');
@@ -49,7 +40,7 @@ app.post('/UploadCertificate',upload.single('image'),(req,res)=>{
     return res.status(400).send('파일이 없습니다.');
   }
   const folderPath = 'ServerImage/'; // 폴더 경로
-  const fileName = req.file.originalname; // 파일 이름
+  const fileName = req.file.originalname; // 파일 이름 (이름 변경도 가능합니다.)
   const filePath = folderPath + fileName; // 전체 파일 경로
   
   const file = bucket.file(filePath);
@@ -235,7 +226,7 @@ const handleSign = (req, res) => {
       }
 
       if (memberDTO) {
-        console.log('DTO 데이터:', memberDTO); // 여기서 DTO 로그를 출력합니다.
+        console.log('DTO 데이터:', memberDTO); //회원가입된 유저 정보 출력
 
         res.json({
           success: true,
@@ -268,15 +259,15 @@ app.post('/UpdateMember',MemberDAO.UpdateMemberInfo);
 app.post('/UpdateProfile',MemberDAO.UpdateProfile);
 
 
+//이메일 인증
+let verificationCode;
 
 const generateRandomVerificationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-let verificationCode = generateRandomVerificationCode();
 
 app.post('/EmailAuth', async (req, res) => {
-  console.log('이메일 인증 실행');
   const { userEmail } = req.body;
   verificationCode = generateRandomVerificationCode(); // 새로운 코드 생성
 
@@ -287,7 +278,6 @@ app.post('/EmailAuth', async (req, res) => {
       pass: 'krwsldkwkbpmjxwq',
     },
   });
-
   try {
     const mailOptions = {
       from: '폴인텍 <polintechnoreply@gmail.com>',
@@ -307,7 +297,6 @@ app.post('/EmailAuth', async (req, res) => {
         </html>
       `,
     };
-
     transporter.sendMail(mailOptions, (error, info) => {
       console.log('이메일  실행');
       if (error) {
@@ -455,12 +444,11 @@ const handleFindPw = (req, res) => {
 };
 
 app.post('/findPw', handleFindPw);
-//비로그인 상태에서 찾기
 //비로그인 상태에서 비밀번호 찾기
 const handleFindPwIdLogginedOut = (req, res) => {
-  const { id } = req.body;
+  const { id, newPw } = req.body;
 
-  MemberDAO.getPwIsLogginedOut(id, (error, memberDTO) => {
+  MemberDAO.getPwIsLogginedOut(id, newPw, (error, memberDTO) => {
     if (error) {
       console.error(error);
       res.status(500).json({ success: false });
@@ -475,7 +463,6 @@ const handleFindPwIdLogginedOut = (req, res) => {
         member: {
           id: memberDTO.member_id,
           pw: memberDTO.member_pw,
-          // 다른 필드도 추가할 수 있습니다.
         },
       });
     } else {
@@ -537,7 +524,6 @@ const handlePwUpdateIsLogginedOut = (req, res) => {
         member: {
           id: memberDTO.member_id,
           newPw: memberDTO.member_pw,
-          // 다른 필드도 추가할 수 있습니다.
         },
       });
     } else {
@@ -805,7 +791,7 @@ app.delete('/DeleteReply/:reply_id', (req, res) => {
     res.json(result);
   });
 });
-//------------------------
-// ... 기타 라우터 및 코드 ...
 
+// ./server/server.js 명령어로 서버를 실행할 수  있습니다.
+// 서버가 실행될 때 dbConnection이 함께 실행됩니다.
 app.listen(3000, () => console.log('Server is running on port 3000'));

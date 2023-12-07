@@ -2,6 +2,7 @@ const db = require('./dbConnection');
 const ReplyDTO = require('./ReplyDTO');
 
 const CreateReply = (req, res, next) => {
+  //게시글의 id,댓글의 id, 작성자의 id, 답글의 내용을 입력받아 DB에 추가한다.
   const replyData = req.body;
 
   const reply_bid = parseInt(req.body.reply_bid, 10);
@@ -52,6 +53,7 @@ const CreateReply = (req, res, next) => {
 };
 
 const EditReply = (req, res, next) => {
+  //답글의 id,답글의 수정 내용을 입력받아 해당하는 답글을 DB에서 수정한다.
   const replyData = req.body;
   console.log('답글 수정(DB) 데이터 : ', replyData);
   const reply_id = parseInt(req.body.reply_id, 10);
@@ -82,6 +84,7 @@ const EditReply = (req, res, next) => {
 };
 
 const DeleteReply = (replyId, callback) => {
+  //답글의 id를 입력받아 DB에서 해당하는 답글을 제거한다.
   console.log('답글 id:', replyId);
   const query = 'DELETE FROM polintech.reply WHERE reply_id = ?';
 
@@ -95,8 +98,9 @@ const DeleteReply = (replyId, callback) => {
 };
 
 const ReplyList = (boardId, callback) => {
+  //게시글의 id를 입력받아 DB에서 해당하는 답글 데이터를 출력한다.
   const query =
-    'SELECT reply.*,member.member_nickname,member.member_name FROM polintech.reply' +
+    'SELECT reply.*,member.member_nickname FROM polintech.reply' +
     ' JOIN polintech.member ON reply.reply_mid= member.member_id ' +
     'WHERE reply_bid = ? ORDER BY reply_id';
 

@@ -2,11 +2,9 @@ const db = require('./dbConnection');
 const CommentDTO = require('./CommentDTO');
 
 const CreateComment = (req, res, next) => {
+  //DB에 작성자의 id,게시글 id, 댓글 내용을 입력받아 DB에 추가한다.
   const commentData = req.body;
 
-  //   const comment_content = req.comment_content;
-  //   const comment_mid = req.comment_mid;
-  //   const board_id = req.board_id;
   console.log('아이디(DB):', req.body.board_id);
   console.log('boardId(DB)', req.body.comment_mid);
   console.log('댓글 내용(DB)', req.body.comment_content);
@@ -49,6 +47,7 @@ const CreateComment = (req, res, next) => {
 };
 
 const EditComment = (req, res, next) => {
+  //댓글의 수정 내용과 댓글의 id를 입력받아 댓글을 수정한다.
   const commentData = req.body;
   const query =
     'UPDATE polintech.comment SET comment_content = ? WHERE comment_id = ?';
@@ -77,6 +76,7 @@ const EditComment = (req, res, next) => {
 };
 
 const DeleteComment = (commentId, callback) => {
+  //댓글의 id를 입력받아 해당하는 댓글을 제거한다.
   console.log('댓글 id : ', commentId);
   const query = 'DELETE FROM polintech.comment WHERE comment_id = ?';
 
@@ -89,23 +89,11 @@ const DeleteComment = (commentId, callback) => {
   });
 };
 
-// const CommentList = (boardId, callback) => {
-//   const query =
-//     'SELECT * FROM polintech.comment WHERE board_id = ? ORDER BY comment_id DESC';
 
-//   db.query(query, [boardId], (error, results) => {
-//     if (error) {
-//       callback(error, null);
-//       return;
-//     }
-//     console.log('댓글 조회(DB) 성고');
-//     const comments = results.map(commentData => new CommentDTO(commentData));
-//     callback(null, comments);
-//   });
-// };
 const CommentList = (boardId, callback) => {
+  //DB에서 해당하는 게시글 id를 가진 댓글 데이터를 출력한다.
   const query =
-    'SELECT comment.* ,member.member_nickname,member_name FROM polintech.comment' +
+    'SELECT comment.* ,member.member_nickname FROM polintech.comment' +
     ' JOIN polintech.member on comment.comment_mid  = member.member_id ' +
     ' WHERE comment_bid = ? ORDER BY comment_id DESC';
 
